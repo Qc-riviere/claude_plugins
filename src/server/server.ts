@@ -2,6 +2,9 @@ import { collectTasks } from "../collector/collect";
 import { readProjects } from "../registry/registry";
 import { readSchedules } from "../schedule/store";
 import { computeNextRun } from "../schedule/nextRun";
+import indexHtml from "./static/index.html" with { type: "text" };
+import appJs from "./static/app.js" with { type: "text" };
+import styleCss from "./static/style.css" with { type: "text" };
 
 export interface ServerOpts {
   port: number;
@@ -37,6 +40,12 @@ export function makeServer(opts: ServerOpts) {
         const filtered = project ? all.filter((s) => s.project === project) : all;
         return json(filtered.map((s) => ({ ...s, next_run: computeNextRun(s.cron_expr) })));
       }
+      if (url.pathname === "/" || url.pathname === "/index.html")
+        return new Response(indexHtml, { headers: { "content-type": "text/html" } });
+      if (url.pathname === "/app.js")
+        return new Response(appJs, { headers: { "content-type": "text/javascript" } });
+      if (url.pathname === "/style.css")
+        return new Response(styleCss, { headers: { "content-type": "text/css" } });
       return new Response("not found", { status: 404 });
     },
   });
