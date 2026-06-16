@@ -8,6 +8,10 @@ agentboard.exe
 npm-cache
 .claude/
 
+# verification artifacts
+.playwright-mcp/
+agentboard-*.png
+
 # output
 out
 dist

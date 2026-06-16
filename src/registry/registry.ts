@@ -19,13 +19,19 @@ export async function readProjects(file: string = PROJECTS_FILE): Promise<Projec
   }
 }
 
+// Normalize separators so the same dir registered as C:\x and C:/x dedupes.
+function normPath(p: string): string {
+  return p.replace(/\\/g, "/").replace(/\/+$/, "");
+}
+
 export async function addProject(
   path: string,
   tool: string | undefined,
   file: string = PROJECTS_FILE,
 ): Promise<void> {
+  path = normPath(path);
   const list = await readProjects(file);
-  const existing = list.find((p) => p.path === path);
+  const existing = list.find((p) => normPath(p.path) === path);
   if (existing) {
     existing.tool = tool ?? existing.tool;
   } else {
