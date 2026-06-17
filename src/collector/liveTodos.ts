@@ -43,24 +43,35 @@ export function extractLastTodos(jsonl: string): LiveTodo[] {
   }));
 }
 
-export async function collectLiveTodos(
+// Most-recently-modified transcript (= current session) id for a project, or null.
+export function latestSessionId(
   projectDir: string,
   claudeHome: string = join(homedir(), ".claude"),
-): Promise<LiveTodo[]> {
+): string | null {
   const dir = join(claudeHome, "projects", encodeCwd(projectDir));
   let files: string[];
   try {
     files = readdirSync(dir).filter((f) => f.endsWith(".jsonl"));
   } catch {
-    return [];
+    return null;
   }
-  if (files.length === 0) return [];
+  if (files.length === 0) return null;
   let latest = "";
   let latestMs = -1;
   for (const f of files) {
     const ms = statSync(join(dir, f)).mtimeMs;
     if (ms > latestMs) { latestMs = ms; latest = f; }
   }
-  const text = await Bun.file(join(dir, latest)).text();
+  return latest.replace(/\.jsonl$/, "");
+}
+
+export async function collectLiveTodos(
+  projectDir: string,
+  claudeHome: string = join(homedir(), ".claude"),
+): Promise<LiveTodo[]> {
+  const sid = latestSessionId(projectDir, claudeHome);
+  if (!sid) return [];
+  const path = join(claudeHome, "projects", encodeCwd(projectDir), `${sid}.jsonl`);
+  const text = await Bun.file(path).text();
   return extractLastTodos(text);
 }

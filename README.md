@@ -13,6 +13,7 @@
   - `TODO.md` —— 复选框列表(`- [ ] / - [x]`)
   - `STATUS.md` —— project-bootstrap 总控台:Phase 账本 + Open items
   - `AI-ISSUES.md` —— 问题表(按 Status 列映射)
+  - **Claude Code Task 系统** —— `~/.claude/tasks/<session>/*.json`(当前会话的 TaskCreate/TaskList 任务,`source=Task`;`blockedBy` 非空 → 阻塞列)
 - **定时任务可视化**:从 `~/.agentboard/schedule.json` 读取,显示下次运行时间(cron 表达式)。只可视化,不执行。
 - **实时刷新**:后端 `fs.watch` + SSE,文件一改看板自动更新,无需刷新页面。
 - **多项目**:下拉筛选 / 全部聚合,卡片标注来源文档与所属项目。

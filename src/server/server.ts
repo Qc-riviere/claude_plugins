@@ -1,4 +1,5 @@
 import { collectTasks } from "../collector/collect";
+import { collectAgentTasks } from "../collector/agentTasks";
 import { collectLiveTodos } from "../collector/liveTodos";
 import { readProjects } from "../registry/registry";
 import { readSchedules } from "../schedule/store";
@@ -70,8 +71,9 @@ export function makeServer(opts: ServerOpts) {
         const projects = project
           ? [project]
           : (await readProjects(opts.projectsFile)).map((p) => p.path);
-        const all = (await Promise.all(projects.map(collectTasks))).flat();
-        return json(all);
+        const fileTasks = (await Promise.all(projects.map((p) => collectTasks(p)))).flat();
+        const agentTasks = (await Promise.all(projects.map((p) => collectAgentTasks(p)))).flat();
+        return json([...fileTasks, ...agentTasks]);
       }
       if (url.pathname === "/api/schedules") {
         const all = await readSchedules(opts.scheduleFile ?? "");
