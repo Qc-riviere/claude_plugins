@@ -11,6 +11,7 @@ npm-cache
 # verification artifacts
 .playwright-mcp/
 agentboard-*.png
+.pre-deploy-check.log
 
 # output
 out
