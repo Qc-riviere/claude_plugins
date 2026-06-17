@@ -26,3 +26,6 @@ h1 { margin-top: 0; }
 #live { font-size:.8rem; color:#6e7681; }
 #sched-list { list-style:none; padding:0; }
 #sched-list li { background:#161b22; border-radius:6px; padding:.5rem .6rem; margin-bottom:.5rem; }
+#sched-list code { font-size:.8rem; opacity:.7; }
+.countdown { display:inline-block; font-variant-numeric:tabular-nums; font-weight:600; color:#58a6ff; }
+.countdown.due { color:#f85149; }
