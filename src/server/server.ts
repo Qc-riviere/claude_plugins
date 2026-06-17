@@ -5,7 +5,10 @@ import { readProjects } from "../registry/registry";
 import { readSchedules } from "../schedule/store";
 import { computeNextRun } from "../schedule/nextRun";
 import { watchProjects } from "./watcher";
+import { encodeCwd } from "../collector/liveTodos";
 import { PROJECTS_FILE, SCHEDULE_FILE } from "../paths";
+import { homedir } from "os";
+import { join } from "path";
 import indexHtml from "./static/index.html" with { type: "text" };
 import appJs from "./static/app.js" with { type: "text" };
 import styleCss from "./static/style.css" with { type: "text" };
@@ -31,11 +34,16 @@ export function makeServer(opts: ServerOpts) {
     }
   };
   // Watch registered projects + state files; clients refetch on event.
+  // Also recursively watch the Claude tasks dir (~/.claude/tasks) and each
+  // project's transcript dir so the Task system + live session todos refresh live.
   readProjects(opts.projectsFile).then((projects) => {
+    const claudeHome = join(homedir(), ".claude");
+    const transcriptDirs = projects.map((p) => join(claudeHome, "projects", encodeCwd(p.path)));
     watchProjects(
       projects.map((p) => p.path),
       [opts.scheduleFile ?? SCHEDULE_FILE, opts.projectsFile ?? PROJECTS_FILE],
       broadcast,
+      [join(claudeHome, "tasks"), ...transcriptDirs],
     );
   });
 

@@ -26,7 +26,8 @@ async function refresh() {
     const items = tasks.filter((t) => t.status === status);
     div.innerHTML = `<h3>${label} (${items.length})</h3>` + items.map((t) => {
       const proj = sel.value ? "" : `<small>· ${t.project.split(/[\\/]/).pop()}</small>`;
-      return `<div class="card">${t.title}<br><small>${t.source}</small> ${proj}</div>`;
+      const key = t.source.replace(/\.md$/, "").replace(/[^a-z]/gi, "").toLowerCase();
+      return `<div class="card tag-${key}"><span class="tag tag-${key}">${t.source}</span> ${t.title} ${proj}</div>`;
     }).join("");
     cols.appendChild(div);
   }
