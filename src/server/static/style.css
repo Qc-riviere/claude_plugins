@@ -5,6 +5,10 @@ h1 { margin-top: 0; }
 .col h3 { margin:.2rem 0 .6rem; font-size:.9rem; text-transform:uppercase; opacity:.7; }
 .card { background:#21262d; border-radius:6px; padding:.5rem .6rem; margin-bottom:.5rem; font-size:.9rem; }
 .card small { opacity:.5; }
+#live-strip { margin: 1rem 0; }
+.live-item { display:inline-block; margin:.2rem .3rem .2rem 0; padding:.25rem .5rem; border-radius:6px; font-size:.85rem; background:#21262d; }
+.live-item.in_progress { background:#1f6feb; color:#fff; }
+.live-item.done { opacity:.5; text-decoration:line-through; }
 #bar { display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
 #bar select { background:#161b22; color:#e6edf3; border:1px solid #30363d; border-radius:6px; padding:.2rem .4rem; }
 #live { font-size:.8rem; color:#6e7681; }

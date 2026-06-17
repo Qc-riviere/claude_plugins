@@ -10,7 +10,7 @@
 | **1 — MVP 看板** | [plan](docs/superpowers/plans/2026-06-16-agentboard-phase1.md) | ✅ done (10 commits on `master`) | ✅ **validated 2026-06-16** | Collector/Schedule/Server/CLI/exe |
 | **1.5 — STATUS/AI-ISSUES 源** | – | ✅ done | ✅ **validated 2026-06-16** | 新增解析器 + 共享表格解析 |
 | **2 — Codex + 实时刷新 + 多项目** | [plan](docs/superpowers/plans/2026-06-16-agentboard-phase2.md) | ✅ done | ✅ **validated 2026-06-17** | Codex hook · SSE 实时 · 项目筛选 |
-| **3 — 会话内实时 todo** | _not yet written_ | ⏳ | ⏳ | 延后：Codex 无 plan 数据、Claude 格式未确认 |
+| **3 — 会话内实时 todo** | [plan](docs/superpowers/plans/2026-06-16-agentboard-phase3.md) | ✅ done | ✅ **validated 2026-06-17** | Claude transcript 最后 TodoWrite；Codex 不可行已记录 |
 
 Legend: ✅ validated · ⏸ impl done, gate open · ⏳ planned · ❌ blocked
 

@@ -16,6 +16,7 @@
 - **定时任务可视化**:从 `~/.agentboard/schedule.json` 读取,显示下次运行时间(cron 表达式)。只可视化,不执行。
 - **实时刷新**:后端 `fs.watch` + SSE,文件一改看板自动更新,无需刷新页面。
 - **多项目**:下拉筛选 / 全部聚合,卡片标注来源文档与所属项目。
+- **会话内实时 todo**:读取项目最近活跃的 Claude Code transcript 的最后一次 TodoWrite,在"🔴 当前会话执行中"细条显示(仅 Claude;Codex rollout 不绑项目且无 plan 数据,暂不支持)。
 - **伴随自启动**:Claude Code 与 Codex 的 SessionStart hook 自动注册当前项目并拉起服务。
 
 ## 安装
@@ -90,7 +91,7 @@ bun run build          # 编译单文件 exe
 
 - 不执行定时任务(只可视化)
 - 不回写任务文档(看板只读)
-- 不读各工具会话内的临时 todo(Claude TodoWrite / Codex plan)——格式未文档化、易碎,留作未来
+- 不支持 Codex 会话内 plan(rollout 不绑项目、无 update_plan 数据);Claude 会话内 todo 已支持
 
 ## License
 

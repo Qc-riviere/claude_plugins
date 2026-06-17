@@ -88,11 +88,14 @@
 - 项目注册（projects.json）+ 端口探测自启动
 - Claude SessionStart 自启动 hook（追加式）
 
-**Phase 2**
-- Codex hook 接入
-- STATUS.md 解析、多项目聚合视图打磨
-- fsnotify + SSE 实时刷新
-- 叠加"会话内实时 todo"（Claude TodoWrite / Codex plan）作为"当前执行中"指示器
+**Phase 2（已完成）**
+- Codex hook 接入 ✅
+- STATUS.md / AI-ISSUES.md 解析 ✅、多项目聚合视图 ✅
+- fsnotify + SSE 实时刷新 ✅
+
+**Phase 3（已完成）**
+- 会话内实时 todo 叠加：读 Claude transcript 最后一次 TodoWrite，"当前会话执行中"细条 ✅
+- Codex 侧不可行（rollout 不绑项目、无 update_plan 数据），已记录排除
 
 ## 明确不做
 - cron 执行引擎（只可视化）

@@ -1,4 +1,5 @@
 import { collectTasks } from "../collector/collect";
+import { collectLiveTodos } from "../collector/liveTodos";
 import { readProjects } from "../registry/registry";
 import { readSchedules } from "../schedule/store";
 import { computeNextRun } from "../schedule/nextRun";
@@ -76,6 +77,13 @@ export function makeServer(opts: ServerOpts) {
         const all = await readSchedules(opts.scheduleFile ?? "");
         const filtered = project ? all.filter((s) => s.project === project) : all;
         return json(filtered.map((s) => ({ ...s, next_run: computeNextRun(s.cron_expr) })));
+      }
+      if (url.pathname === "/api/live") {
+        const projects = project
+          ? [project]
+          : (await readProjects(opts.projectsFile)).map((p) => p.path);
+        const all = (await Promise.all(projects.map((p) => collectLiveTodos(p)))).flat();
+        return json(all);
       }
       if (url.pathname === "/" || url.pathname === "/index.html")
         return new Response(indexHtml, { headers: { "content-type": "text/html" } });

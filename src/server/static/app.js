@@ -34,6 +34,12 @@ async function refresh() {
   document.getElementById("sched-list").innerHTML = scheds.map((s) =>
     `<li><b>${s.name}</b> — ${s.cron_expr}<br><small>下次: ${s.next_run ?? "无效表达式"}</small></li>`
   ).join("") || "<li><small>暂无定时任务</small></li>";
+
+  const live = await (await fetch("/api/live" + q())).json();
+  const ll = document.getElementById("live-list");
+  ll.innerHTML = live.length
+    ? live.map((t) => `<span class="live-item ${t.status}">${t.content}</span>`).join("")
+    : '<small>无活跃会话 todo</small>';
 }
 
 sel.addEventListener("change", refresh);
