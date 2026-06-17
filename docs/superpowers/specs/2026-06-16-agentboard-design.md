@@ -36,7 +36,9 @@
 - 数据源：
   - `.claude/RESUME.md` —— 用户 CLAUDE.md Rule 16 的任务进度表（markdown 表 `| Task | Status | Commit |`，状态用 ⬜/🔄/⏸️/✅）
   - `TODO.md` —— 复选框/列表
-  - `STATUS.md` —— project-bootstrap 章节式（Phase 2）
+  - `STATUS.md` —— project-bootstrap 总控台：Phase 账本 + Open items（已实现，见 status.ts）
+  - `AI-ISSUES.md` —— project-bootstrap 问题表（已实现，见 aiIssues.ts）
+  - ⚠️ 冲突：`⏸` 在 RESUME.md=阻塞、在 STATUS.md=实现完成待门禁(≈进行中)，故两者用各自的状态映射，不共用 statusFromEmoji
 - 统一模型：
   ```
   Task { ID string; Title string; Status Status; Source string; Project string }
