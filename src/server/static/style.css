@@ -59,8 +59,12 @@ h1 { margin-top: 0; }
 #bar { display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
 #bar select { background:#161b22; color:#e6edf3; border:1px solid #30363d; border-radius:6px; padding:.2rem .4rem; }
 #live { font-size:.8rem; color:#6e7681; }
-#sched-list { list-style:none; padding:0; }
-#sched-list li { background:#161b22; border-radius:6px; padding:.5rem .6rem; margin-bottom:.5rem; }
-#sched-list code { font-size:.8rem; opacity:.7; }
-.countdown { display:inline-block; font-variant-numeric:tabular-nums; font-weight:600; color:#58a6ff; }
+#sched-list { list-style:none; padding:0; margin:0; display:grid; gap:.6rem; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); }
+.sched-card { margin-bottom:0; border-left-color:#d29922; }
+.sched-card .ico { color:#d29922; }
+.sched-card .cron { font-family:ui-monospace, "Cascadia Code", monospace; font-size:.7rem; opacity:.75; background:rgba(255,255,255,.06); padding:.1rem .4rem; border-radius:6px; }
+.sched-name { position:relative; color:#e6edf3; font-size:.9rem; margin:.1rem 0 .4rem; }
+.sched-empty { opacity:.5; }
+.countdown { position:relative; display:inline-block; font-variant-numeric:tabular-nums; font-weight:600; color:#58a6ff; }
+.sched-card .countdown { font-size:1.3rem; letter-spacing:.02em; }
 .countdown.due { color:#f85149; }

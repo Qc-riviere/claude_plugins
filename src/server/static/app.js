@@ -11,6 +11,7 @@ const ICONS = {
   todo: '<path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/><path d="m9 11 3 3L22 4"/>',
   status: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
   aiissues: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  schedule: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
 };
 function svgIcon(key) {
   return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico">${ICONS[key] || ICONS.todo}</svg>`;
@@ -52,13 +53,12 @@ async function refresh() {
   }
   const scheds = await (await fetch("/api/schedules" + q())).json();
   document.getElementById("sched-list").innerHTML = scheds.map((s) => {
+    const head = `<div class="card-top"><span class="card-icon">${svgIcon("schedule")}</span><code class="cron">${s.cron_expr}</code></div><div class="sched-name">${s.name}</div>`;
     if (!s.next_run)
-      return `<li><b>${s.name}</b> — <code>${s.cron_expr}</code><br><small>无效表达式</small></li>`;
+      return `<li class="card sched-card">${head}<div class="countdown due">无效表达式</div></li>`;
     const when = new Date(s.next_run).toLocaleString();
-    return `<li><b>${s.name}</b> — <code>${s.cron_expr}</code>` +
-      `<br><span class="countdown" data-next="${s.next_run}">…</span>` +
-      `<small> · 下次 ${when}</small></li>`;
-  }).join("") || "<li><small>暂无定时任务</small></li>";
+    return `<li class="card sched-card">${head}<div class="countdown" data-next="${s.next_run}">…</div><div class="card-meta">下次 ${when}</div></li>`;
+  }).join("") || '<li class="sched-empty"><small>暂无定时任务</small></li>';
   tickCountdowns();
 
   const live = await (await fetch("/api/live" + q())).json();
