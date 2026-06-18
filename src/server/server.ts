@@ -72,6 +72,12 @@ export function makeServer(opts: ServerOpts) {
         });
       }
 
+      if (url.pathname === "/api/refresh") {
+        // explicit poke (e.g. from `register` on session start) so open boards
+        // re-scan immediately without relying on flaky file watching.
+        broadcast();
+        return json({ ok: true });
+      }
       if (url.pathname === "/api/projects") {
         return json(await readProjects(opts.projectsFile));
       }

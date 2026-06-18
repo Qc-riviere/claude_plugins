@@ -107,5 +107,8 @@ function connect() {
   es.onerror = () => { live.style.color = "#f85149"; };
 }
 
+// re-scan when the board tab regains focus (catches changes missed while hidden)
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
+
 (async () => { await loadProjects(); await refresh(); connect(); })();
 setInterval(refresh, 30000); // fallback

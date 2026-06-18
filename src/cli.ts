@@ -93,6 +93,9 @@ export async function run(argv: string[]): Promise<void> {
       // cold start: wait until it's listening, then surface the board once
       if (await waitForPort(port)) openBrowser(port);
     }
+    // poke the server so any open boards re-scan now (deterministic; the file
+    // watcher alone is unreliable on Windows for single-file rewrites)
+    await fetch(`http://127.0.0.1:${port}/api/refresh`).catch(() => {});
     console.log(`registered ${path}`);
     return;
   }
