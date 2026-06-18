@@ -1,7 +1,18 @@
-body { font-family: system-ui, sans-serif; margin: 2rem; background:#0d1117; color:#e6edf3; }
+html { background:#0d1117; }
+body { font-family: system-ui, sans-serif; margin: 2rem; background:transparent; color:#e6edf3; }
+/* grid background with fade-edges mask (native port of BGPattern variant=grid mask=fade-edges) */
+#bg-grid {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.10) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.10) 1px, transparent 1px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000, transparent);
+  mask-image: radial-gradient(ellipse at center, #000, transparent);
+}
 h1 { margin-top: 0; }
 #cols { display: flex; gap: 1rem; }
-.col { flex: 1; background:#161b22; border-radius:8px; padding:.75rem; }
+.col { flex: 1; background:transparent; border-radius:8px; padding:.75rem; }
 .col h3 { margin:.2rem 0 .6rem; font-size:.9rem; text-transform:uppercase; opacity:.7; }
 /* bento-style card: rounded, bordered, hover-lift + radial dot pattern */
 .card {
