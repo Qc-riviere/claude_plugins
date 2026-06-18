@@ -3,14 +3,38 @@ h1 { margin-top: 0; }
 #cols { display: flex; gap: 1rem; }
 .col { flex: 1; background:#161b22; border-radius:8px; padding:.75rem; }
 .col h3 { margin:.2rem 0 .6rem; font-size:.9rem; text-transform:uppercase; opacity:.7; }
-.card { background:#21262d; border-radius:6px; padding:.5rem .6rem; margin-bottom:.5rem; font-size:.9rem; border-left:3px solid #6e7681; }
+/* bento-style card: rounded, bordered, hover-lift + radial dot pattern */
+.card {
+  position:relative; overflow:hidden;
+  background:#161b22; border:1px solid rgba(255,255,255,.08); border-left-width:3px;
+  border-radius:12px; padding:.7rem .8rem; margin-bottom:.6rem; font-size:.9rem;
+  transition:transform .3s, box-shadow .3s, border-color .3s; will-change:transform;
+}
+.card:hover { transform:translateY(-2px); box-shadow:0 2px 12px rgba(0,0,0,.45); border-color:rgba(255,255,255,.16); }
+.card::before {
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .3s;
+  background-image:radial-gradient(circle at center, rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size:6px 6px;
+}
+.card:hover::before { opacity:1; }
+.card-top { position:relative; display:flex; align-items:center; justify-content:space-between; margin-bottom:.5rem; }
+.card-icon { width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.08); transition:background .3s; }
+.card:hover .card-icon { background:rgba(255,255,255,.14); }
+.card-icon .ico { width:16px; height:16px; }
+.card-title { position:relative; color:#e6edf3; line-height:1.3; letter-spacing:-.01em; }
+.card-meta { position:relative; margin-top:.35rem; font-size:.7rem; opacity:.45; }
 .card small { opacity:.5; }
-/* per-source accent (区分 tasks 和各类 todo) */
+/* per-source accent: left stripe + icon color */
 .card.tag-resume   { border-left-color:#3fb950; }
 .card.tag-todo     { border-left-color:#58a6ff; }
 .card.tag-status   { border-left-color:#d29922; }
 .card.tag-aiissues { border-left-color:#f85149; }
 .card.tag-task     { border-left-color:#bc8cff; }
+.card.tag-resume   .ico { color:#3fb950; }
+.card.tag-todo     .ico { color:#58a6ff; }
+.card.tag-status   .ico { color:#d29922; }
+.card.tag-aiissues .ico { color:#f85149; }
+.card.tag-task     .ico { color:#bc8cff; }
 .tag { display:inline-block; font-size:.65rem; padding:.05rem .35rem; border-radius:4px; margin-right:.35rem; vertical-align:middle; color:#0d1117; font-weight:600; }
 .tag.tag-resume   { background:#3fb950; }
 .tag.tag-todo     { background:#58a6ff; }

@@ -4,6 +4,18 @@ const COLS = [
 ];
 const sel = document.getElementById("project");
 
+// Inline lucide SVG inner paths, keyed by source (avoids a React/lucide dep).
+const ICONS = {
+  task: '<rect x="3" y="5" width="6" height="6" rx="1"/><path d="m3 17 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/>',
+  resume: '<line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
+  todo: '<path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/><path d="m9 11 3 3L22 4"/>',
+  status: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+  aiissues: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+};
+function svgIcon(key) {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico">${ICONS[key] || ICONS.todo}</svg>`;
+}
+
 async function loadProjects() {
   const projects = await (await fetch("/api/projects")).json();
   for (const p of projects) {
@@ -25,9 +37,16 @@ async function refresh() {
     div.className = "col";
     const items = tasks.filter((t) => t.status === status);
     div.innerHTML = `<h3>${label} (${items.length})</h3>` + items.map((t) => {
-      const proj = sel.value ? "" : `<small>· ${t.project.split(/[\\/]/).pop()}</small>`;
       const key = t.source.replace(/\.md$/, "").replace(/[^a-z]/gi, "").toLowerCase();
-      return `<div class="card tag-${key}"><span class="tag tag-${key}">${t.source}</span> ${t.title} ${proj}</div>`;
+      const meta = sel.value ? "" : t.project.split(/[\\/]/).pop();
+      return `<div class="card tag-${key}">
+        <div class="card-top">
+          <span class="card-icon">${svgIcon(key)}</span>
+          <span class="tag tag-${key}">${t.source}</span>
+        </div>
+        <div class="card-title">${t.title}</div>
+        ${meta ? `<div class="card-meta">· ${meta}</div>` : ""}
+      </div>`;
     }).join("");
     cols.appendChild(div);
   }
