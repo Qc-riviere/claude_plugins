@@ -41,6 +41,31 @@ function launchServerDetached(port: number): void {
   }
 }
 
+// Open the dashboard in the default browser. Only called on a cold start so
+// repeated sessions don't spam new tabs.
+function openBrowser(port: number): void {
+  const url = `http://127.0.0.1:${port}`;
+  if (process.platform === "win32") {
+    Bun.spawn(["powershell", "-NoProfile", "-Command", `Start-Process '${url}'`], {
+      stdio: ["ignore", "ignore", "ignore"],
+    });
+  } else {
+    const cmd = process.platform === "darwin" ? "open" : "xdg-open";
+    Bun.spawn([cmd, url], { stdio: ["ignore", "ignore", "ignore"] }).unref();
+  }
+}
+
+// Poll until the server is accepting requests (so the browser doesn't open
+// before it's listening). Mirrors clawd's waitForClawdPort.
+async function waitForPort(port: number, timeoutMs = 6000): Promise<boolean> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (await portOpen(port)) return true;
+    await Bun.sleep(150);
+  }
+  return false;
+}
+
 export async function run(argv: string[]): Promise<void> {
   const [cmd, ...args] = argv;
   const port = Number(getFlag(args, "--port") ?? DEFAULT_PORT);
@@ -63,7 +88,11 @@ export async function run(argv: string[]): Promise<void> {
       process.exit(1);
     }
     await addProject(path, getFlag(args, "--tool"));
-    if (!(await portOpen(port))) launchServerDetached(port);
+    if (!(await portOpen(port))) {
+      launchServerDetached(port);
+      // cold start: wait until it's listening, then surface the board once
+      if (await waitForPort(port)) openBrowser(port);
+    }
     console.log(`registered ${path}`);
     return;
   }
