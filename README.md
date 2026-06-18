@@ -2,7 +2,7 @@
 
 在浏览器里统一可视化 **Claude Code / Codex** 项目的 **todo** 和 **定时任务** 的本地看板。
 
-单文件 exe(Bun 编译),伴随 AI 编程会话自启动:开任意 Claude Code / Codex 会话 → 看板自动起、自动收录当前项目。todo 直接读项目里的文档(跨工具、持久),定时任务从一个本地 JSON 读取,文件一改看板**实时刷新**。
+单文件 exe(Bun 编译),伴随 AI 编程会话自启动:开任意 Claude Code / Codex 会话 → 看板自动起、自动收录当前项目、冷启动时自动打开浏览器。todo 直接读项目里的文档(跨工具、持久),定时任务从一个本地 JSON 读取,文件一改看板**实时刷新**。UI 为 bento 卡片 + 网格背景,卡片按来源配色。
 
 ![看板](docs/screenshots/agentboard.png)
 
@@ -14,11 +14,11 @@
   - `STATUS.md` —— project-bootstrap 总控台:Phase 账本 + Open items
   - `AI-ISSUES.md` —— 问题表(按 Status 列映射)
   - **Claude Code Task 系统** —— `~/.claude/tasks/<session>/*.json`(当前会话的 TaskCreate/TaskList 任务,`source=Task`;`blockedBy` 非空 → 阻塞列)
-- **定时任务可视化**:从 `~/.agentboard/schedule.json` 读取,显示下次运行时间(cron 表达式)。只可视化,不执行。
-- **实时刷新**:后端 `fs.watch` + SSE,文件一改看板自动更新,无需刷新页面。
-- **多项目**:下拉筛选 / 全部聚合,卡片标注来源文档与所属项目。
+- **定时任务可视化**:从 `~/.agentboard/schedule.json` 读取,bento 卡片显示 cron 表达式 + 下次运行时间,并带**每秒倒计时**(到点变红并自动滚到下一周期)。只可视化,不执行。
+- **实时刷新**:后端 `fs.watch` + SSE 文件一改自动更新;每次开会话再 `register` 主动戳 `/api/refresh` **确定性广播**(不依赖 Windows 上不可靠的单文件监听);切回看板标签页也会立即重读。
+- **多项目**:下拉筛选 / 全部聚合,卡片标注来源文档与所属项目,按来源配色(Task 紫 / RESUME 绿 / TODO 蓝 / STATUS 橙 / AI-ISSUES 红)。
 - **会话内实时 todo**:读取项目最近活跃的 Claude Code transcript 的最后一次 TodoWrite,在"🔴 当前会话执行中"细条显示(仅 Claude;Codex rollout 不绑项目且无 plan 数据,暂不支持)。
-- **伴随自启动**:Claude Code 与 Codex 的 SessionStart hook 自动注册当前项目并拉起服务。
+- **伴随自启动**:Claude Code 与 Codex 的 SessionStart hook 自动注册当前项目并拉起服务;冷启动(服务首次拉起)时自动打开浏览器,后续会话不重复弹标签页。
 
 ## 安装
 
@@ -77,7 +77,7 @@ agentboard version
 | `server/` | `Bun.serve` REST API + SSE + 内嵌看板静态资源 + 文件监听 |
 | `registry/` | 项目登记(`~/.agentboard/projects.json`)、端口探测、脱离启动 |
 
-API:`GET /api/projects` · `/api/tasks?project=` · `/api/schedules?project=` · `/api/stream`(SSE)。
+API:`GET /api/projects` · `/api/tasks?project=` · `/api/schedules?project=`(含 `next_run`) · `/api/live?project=`(会话内 todo) · `/api/stream`(SSE) · `/api/refresh`(广播刷新)。
 
 ## 开发
 
